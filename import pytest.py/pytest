@@ -1,0 +1,30 @@
+import pytest
+from unittest.mock import patch
+
+def test_CSS_styles(mocker):
+    # Crée un patch pour document.createElement
+    createElement_mock = mocker.patch("document.createElement")
+    # Crée un patch pour document.body.appendChild
+    appendChild_mock = mocker.patch("document.body.appendChild")
+
+    # Exécute la fonction testée
+    testCSSStyles()
+
+    # Vérifie que createElement a été appelé avec les arguments appropriés
+    createElement_mock.assert_called_once_with('div')
+    # Vérifie que appendChild a été appelé avec l'élément div créé
+    appendChild_mock.assert_called_once()
+
+    # Vérifie la couleur de fond appliquée à l'élément (simulé)
+    # Par exemple, simuler une couleur de fond correspondant à celle attendue
+    div_style = {'backgroundColor': 'rgb(46, 204, 113)'}
+    mocker.patch.object(window, 'getComputedStyle', return_value=div_style)
+
+    # Exécute à nouveau la fonction testée pour vérifier la couleur de fond
+    testCSSStyles()
+
+    # Vérifie que getComputedStyle a été appelé avec l'élément div créé
+    window.getComputedStyle.assert_called_once_with(createElement_mock.return_value)
+
+# Exécutez le test
+pytest.main([__file__])
